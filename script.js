@@ -1,4 +1,5 @@
 const searchInput = document.querySelector(".search-input");
+const currentWeatherDiv = document.querySelector(".current-weather");
 
 const API_KEY = "2072570e7c7b4afa9e6192309242409";
 
@@ -10,7 +11,12 @@ const getWeatherDetails = async (cityName) => {
         const response = await fetch(API_URL);
         const data = await response.json();
 
-        const temperature = 
+        //Extract current weather details
+        const temperature = data.current.temp_c;
+        const description = data.current.condition.text;
+
+        currentWeatherDiv.querySelector(".temperature").innerHTML = `${temperature}<span>°C</span>`
+
         console.log(data)
     } catch (error) {
         console.log(error);
