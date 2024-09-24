@@ -146,11 +146,29 @@ body {
     display: flex;
     gap: 7px;
     font-weight: 500;
-    align-items:center; 
-    flex-direction:column;
-} 
+    align-items: center;
+    flex-direction: column;
+}
 
 .hourly-weather .weather-item .weather-icon {
     width: 28px;
     aspect-ratio: 1;
+}
+
+@media (max-width:624px) {
+body {
+ padding: 15px;   
+}
+
+.search-section {
+    padding: 20px;
+}
+
+.hourly-weather {
+    padding: 16px 20px;
+}
+
+.hourly-weather .weather-list {
+    gap: 32px;
+}
 }
