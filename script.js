@@ -5,6 +5,7 @@ const API_KEY = "2072570e7c7b4afa9e6192309242409";
 
 //weather codes for mapping to custom icons
 const weatherCodes = {
+
     clear: [1000],
     clouds: [1003, 1006, 1009],
     mist: [1030, 1135, 1147],
@@ -15,8 +16,25 @@ const weatherCodes = {
     thunder_rain: [1273, 1276]
 }
 
+const displayHourlyForecast = (hourlyData) => {
+    const currentHour = new Date().setminutes(0, 0, 0);
+    const next24Hours = currentHour + 24 * 60 * 60 * 1000;
+
+    //Filter the hourly data to only include the next 24 hours
+    const next24HoursData = hourlyData.filter(({ time }) => {
+    const forecastTime = new Date(time).getTime();
+    return forecastTime >= currentHour && forecastTime <= next24Hours;
+});
+
+const hourlyWeatherHTML = next24HoursData.map(item => {
+    const temperature = Math.floor(item.temp_c);
+    const time = Math.floor();
+    const weatherIcon = Object.keys(weatherCodes).find(icon => weatherCodes[icon].includes(data.current.condition.code));
+})
+}
+
 const getWeatherDetails = async (cityName) => {
-    const API_URL = `http://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&q=${cityName}`;
+    const API_URL = `http://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&q=${cityName}&days=2`;
 
     try {
         //fetch weather data form the API and parse the response as JSON
@@ -26,14 +44,17 @@ const getWeatherDetails = async (cityName) => {
         //Extract current weather details
         const temperature = Math.floor(data.current.temp_c);
         const description = data.current.condition.text;
-        const weatherIcon = Object.keys(weatherCodes).find(icon => weatherCodes[icon].includes(data.current.condition.code))
+        const weatherIcon = Object.keys(weatherCodes).find(icon => weatherCodes[icon].includes(data.current.condition.code));
 
         //update the current weather display
         currentWeatherDiv.querySelector(".weather-icon").src = `icons/${weatherIcon}.svg`;
         currentWeatherDiv.querySelector(".temperature").innerHTML = `${temperature}<span>°C<span>`;
         currentWeatherDiv.querySelector(".description").innerText = description;
 
-        console.log(data)
+        //Combine hourly data from today and tomorrow
+        const combinedHourlyData = [...data.forecast.forecastday[0].hour, ...data.forecast.forecastday[1].hour];
+
+        displayHourlyForecast(combinedHourlyData);
     } catch (error) {
         console.log(error);
     }
