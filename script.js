@@ -1,5 +1,6 @@
 const searchInput = document.querySelector(".search-input");
 const currentWeatherDiv = document.querySelector(".current-weather");
+const hourlyWeatherDiv = document.querySelector(".hourly-weather .weather-list");
 
 const API_KEY = "2072570e7c7b4afa9e6192309242409";
 
@@ -17,20 +18,27 @@ const weatherCodes = {
 }
 
 const displayHourlyForecast = (hourlyData) => {
-    const currentHour = new Date().setminutes(0, 0, 0);
+    const currentHour = new Date().setMinutes(0, 0, 0);
     const next24Hours = currentHour + 24 * 60 * 60 * 1000;
 
     //Filter the hourly data to only include the next 24 hours
     const next24HoursData = hourlyData.filter(({ time }) => {
-    const forecastTime = new Date(time).getTime();
-    return forecastTime >= currentHour && forecastTime <= next24Hours;
-});
+        const forecastTime = new Date(time).getTime();
+        return forecastTime >= currentHour && forecastTime <= next24Hours;
+    });
 
-const hourlyWeatherHTML = next24HoursData.map(item => {
-    const temperature = Math.floor(item.temp_c);
-    const time = Math.floor();
-    const weatherIcon = Object.keys(weatherCodes).find(icon => weatherCodes[icon].includes(data.current.condition.code));
-})
+    //Generate HTML for each hourly forecast and display    
+    hourlyWeatherDiv.innerHTML = next24HoursData.map(item => {
+        const temperature = Math.floor(item.temp_c);
+        const time = item.time.split(" ")[1].substring(0,5);
+        const weatherIcon = Object.keys(weatherCodes).find(icon => weatherCodes[icon].includes(item.condition.code));
+
+        return `<li class="weather-item">
+            <p class="time">${time}</p>
+                <img src="icons/${weatherIcon}.svg" class="weather-icon">
+                <p class="temperature">${temperature}</p>
+                </li>`;
+    }).join("");
 }
 
 const getWeatherDetails = async (cityName) => {
