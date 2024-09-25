@@ -155,19 +155,19 @@ body {
 }
 
 @media (max-width:624px) {
-body {
- padding: 15px;   
-}
+    body {
+        padding: 15px;
+    }
 
-.search-section {
-    padding: 20px;
-}
+    .search-section {
+        padding: 20px;
+    }
 
-.hourly-weather {
-    padding: 16px 20px;
-}
+    .hourly-weather {
+        padding: 16px 20px;
+    }
 
-.hourly-weather .weather-list {
-    gap: 32px;
-}
+    .hourly-weather .weather-list {
+        gap: 32px;
+    }
 }
