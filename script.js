@@ -29,7 +29,7 @@ const getWeatherDetails = async (cityName) => {
         const weatherIcon = Object.keys(weatherCodes).find(icon => weatherCodes[icon].includes(data.current.condition.code))
 
         //update the current weather display
-        currentWeatherDiv.querySelector(".temperature").src = `./img/.svg`;
+        currentWeatherDiv.querySelector(".weather-icon").src = `./img/.svg`;
         currentWeatherDiv.querySelector(".temperature").innerHTML = `${temperature}<span>°C<span>`;
         currentWeatherDiv.querySelector(".description").innerText = description;
 
