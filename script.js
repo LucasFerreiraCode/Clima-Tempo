@@ -1,4 +1,5 @@
 const searchInput = document.querySelector(".search-input");
+const locationButton = document.querySelector(".location-button");
 const currentWeatherDiv = document.querySelector(".current-weather");
 const hourlyWeatherDiv = document.querySelector(".hourly-weather .weather-list");
 
@@ -30,7 +31,7 @@ const displayHourlyForecast = (hourlyData) => {
     //Generate HTML for each hourly forecast and display it 
     hourlyWeatherDiv.innerHTML = next24HoursData.map(item => {
         const temperature = Math.floor(item.temp_c);
-        const time = item.time.split(" ")[1].substring(0,5);
+        const time = item.time.split(" ")[1].substring(0, 5);
         const weatherIcon = Object.keys(weatherCodes).find(icon => weatherCodes[icon].includes(item.condition.code));
 
         return `<li class="weather-item">
@@ -41,8 +42,9 @@ const displayHourlyForecast = (hourlyData) => {
     }).join("");
 }
 
-const getWeatherDetails = async (cityName) => {
-    const API_URL = `http://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&q=${cityName}&days=2`;
+const getWeatherDetails = async (API_URL) => {
+    window.innerWidth <= 768 && searchInput.blur();
+    document.body.classList.remove("show-no-results");
 
     try {
         //fetch weather data form the API and parse the response as JSON
@@ -63,10 +65,17 @@ const getWeatherDetails = async (cityName) => {
         const combinedHourlyData = [...data.forecast.forecastday[0].hour, ...data.forecast.forecastday[1].hour];
 
         displayHourlyForecast(combinedHourlyData);
-    } catch (error) {
-        console.log(error);
-    }
 
+        searchInput.value = data.location.name;
+    } catch (error) {
+        document.body.classList.add("show-no-results");
+    }
+}
+
+//Setup up the weather request for a specific city
+const setupWeatherRequest = (cityName) => {
+    const API_URL = `http://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&q=${cityName}&days=2`;
+    getWeatherDetails(API_URL);
 }
 
 //handle user input in the search box
@@ -74,6 +83,20 @@ searchInput.addEventListener("keyup", (e) => {
     const cityName = searchInput.value.trim();
 
     if (e.key == "Enter" && cityName) {
-        getWeatherDetails(cityName);
+        setupWeatherRequest(cityName);
     }
 });
+
+//Get user's coordinates
+locationButton.addEventListener("click", () => {
+    navigator.geolocation.getCurrentPosition(position => {
+        const { latitude, longitude } = position.coords;
+        const API_URL = `http://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&q=${latitude},${longitude}&days=2`;
+        getWeatherDetails(API_URL);
+    }, error => {
+        alert("Location acesse denied. Please enable permissions to use this fature.")
+    });
+});
+
+//Initial weather request for London as the default city
+setupWeatherRequest("Peruibe");
