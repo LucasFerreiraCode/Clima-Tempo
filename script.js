@@ -27,7 +27,7 @@ const displayHourlyForecast = (hourlyData) => {
         return forecastTime >= currentHour && forecastTime <= next24Hours;
     });
 
-    //Generate HTML for each hourly forecast and display    
+    //Generate HTML for each hourly forecast and display it 
     hourlyWeatherDiv.innerHTML = next24HoursData.map(item => {
         const temperature = Math.floor(item.temp_c);
         const time = item.time.split(" ")[1].substring(0,5);
